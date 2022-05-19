@@ -1,1 +1,50 @@
 Movie Hunt is an app that allows you to easily filter movies using diverse criteria to find the best match possible.
+
+
+
+
+
+request                       url                       http method                    request body data format            response body data format
+
+
+return all                  /movies                       get                                  none                        a json object holding data about all the movies
+movies
+
+
+
+return data                 /movies/:title           get                                  none                         a json object holding data about a single movie
+(description, genre,                                                                                                       {id: , description: , gente: , director: , imageURL }
+director, image url)                                                                                                        
+for a movie
+
+
+
+return data about a         /movies/:genre/:genreName             get                                     none                       a json object holding data about all the movies under
+genre                                                                                                                       the requested genre
+
+
+
+return data about a         /movies/directors/:directorName     get                                   none                       a json object holding data about a director
+director(bio, birth year,                                                                                                  (id: , bio: , birthyear: , deathyear: ,)
+ death year) 
+
+
+ 
+allow new users to register  /users/                     post                             a json object holding            a json object holding data about a new user was added
+                                                                                        data about the new user
+
+
+allow users to update        /users/:id/               put                               none                             a text indicating that the users username was updated
+their info (username)               
+
+
+allow users to add a movie
+to their favourite list      /users/:id/:movieTitle/    put                               none                               a text indicating movie was added to favourites list
+
+
+allow users to remove a       /users/:id/:movieTitle/    delete                            none                             a text indicating movie was removed from favourites list
+movie from their favourites
+list 
+
+
+allow users to deregister      /users/:name/           delete                               none                             a text indicating user was deregistered
