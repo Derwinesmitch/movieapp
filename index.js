@@ -19,45 +19,18 @@ const express = require('express'),
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
 
 app.use(morgan('common'));
-
-// let movies = [
-//     {
-//         "Title": 'Movie1',
-//         "Genre": {
-//             "Name":"Drama"},
-//         "Director": {
-//             "Name":'hector'
-//         } 
-//     },
-//     {
-//         "Title": 'Movie2',
-//         "Genre": {
-//             "Name":"Comedy"},
-//         "Director": {
-//             "Name":'Jorge',
-//             "Description":'He is a funny specialist'
-//         } 
-//     }
-// ];
-
-
-// let users = [
-//     {
-//         id: 1,
-//         name: "Juan",
-//         favouriteMovies: ["The Fountain"]
-//     },
-// ]
-
 
 
 app.post('/users', (req, res) => {
     Users.findOne({ Username: req.body.Username })
     .then((user) => {
         if(user) {
-            return res.status(400).send(req.body.Username + 'already exists');
+            return res.status(400).send(req.body.Username + ' already exists');
         } else {
             Users
                 .create({
@@ -79,7 +52,7 @@ app.post('/users', (req, res) => {
     });
 });
 
-app.get('/users', (req, res) => {
+app.get('/users', passport.authenticate('jwt', { session: false}), (req, res) => {
     Users.find()
     .then((users) => {
         res.status(201).json(users);
@@ -112,7 +85,7 @@ app.get('/movies/genre/:Name', (req, res) => {
    });
 });
 
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false}), (req, res) => {
     Movies.find()
         .then((movies) => {
          res.status(200).json(movies);   
@@ -219,19 +192,6 @@ app.delete('/users/:Username', (req, res) =>{
         res.status(500).send('Error: ' + err);
     });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 app.use('/documentation', express.static('public'));
