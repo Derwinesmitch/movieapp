@@ -2,6 +2,7 @@ const express = require('express'),
     bodyParser = require('body-parser'),   
     mongoose = require('mongoose'),
     morgan = require('morgan'),
+    path = require('path'),
     Models = require('./models.js');    
 
 const { check, validationResult } = require('express-validator');
@@ -24,12 +25,16 @@ app.use(morgan('common'));
 const Genres = Models.Genre;
 const Directors = Models.Director; 
 
-// mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true});
-mongoose.connect( process.env.CONNECTION_URI, {  useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true});
+// mongoose.connect( process.env.CONNECTION_URI, {  useNewUrlParser: true, useUnifiedTopology: true });
 
 
 app.get('/', (req, res) => {
     res.send('Welcome to my app');
+});
+
+app.get('/documentation', function(req, res) {
+    res.sendFile(path.join(__dirname + "/public/documentation.html"));
 });
 
 app.post('/users', 
@@ -46,7 +51,7 @@ app.post('/users',
         return res.status(422).json({ errors: errors.array() });
     }
     
-    let hashedPassword = Users.hashPassword(req.body.Password);
+    const hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOne({ Username: req.body.Username })
     .then((user) => {
         if(user) {
@@ -88,12 +93,13 @@ passport.authenticate('jwt', { session: false}),
         return res.status(422).json({ errors: errors.array() });
     }
    
+    const hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOneAndUpdate(
         {Username: req.params.Username},
         {
             $set: {
                 Username: req.body.Username,
-                Password: req.body.Password,
+                Password: hashedPassword,
                 Email: req.body.Email,
                 Birth: req.body.Birth,
             },
@@ -109,14 +115,6 @@ passport.authenticate('jwt', { session: false}),
         }
     );
 });
-
-
-
-
-
-
-
-
 
 app.get('/users', passport.authenticate('jwt', { session: false}), (req, res) => {
     Users.find()
@@ -186,7 +184,10 @@ app.get('/movies/directors/:Name', passport.authenticate('jwt', {session: false}
 });
 
 
-
+// Todo
+// Expose documentation.html to a new route
+// Add /login to documenation.html
+// Correct the Fav api endpoint
 
 
 
@@ -236,9 +237,6 @@ app.delete('/users/:Username', passport.authenticate('jwt', {session: false}), (
         res.status(500).send('Error: ' + err);
     });
 });
-
-
-app.use('/documentation', express.static('public'));
 
 const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0',() => {

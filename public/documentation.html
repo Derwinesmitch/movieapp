@@ -75,7 +75,7 @@
 
         <tr>
             <td>allow users to add a movie to their favourite list </td>
-            <td>/users/:id/:movieTitle/</td>
+            <td>/users/:Username/Movies/:MovieID</td>
             <td> put </td>
             <td>none</td>
             <td>a text indicating movie was added to favourites list</td>
@@ -83,7 +83,7 @@
        
         <tr>
             <td> allow users to remove a movie from their favourites  list </td>
-            <td>/users/:id/:movieTitle/</td>
+            <td>/users/:Username/Movies/:MovieID</td>
             <td>delete</td>
             <td>none</td>
             <td>a text indicating movie was removed from favourites list</td>
@@ -97,7 +97,14 @@
             <td>a text indicating user was deregistered</td>
         </tr>
 
-        allow users to deregister      /users/:name/           delete                               none                             a text indicating user was deregistered
+        <tr>
+            <td> allow users to get a token</td>
+            <td>/login</td>
+            <td>post</td>
+            <td>none</td>
+            <td>receive tokenfor authorization</td>
+        </tr>
+
     </table>
 </div>
 
