@@ -149,7 +149,7 @@ app.get('/movies/genre/:Name', passport.authenticate('jwt', {session: false}), (
    });
 });
 
-app.get('/movies', passport.authenticate('jwt', { session: false}), (req, res) => {
+app.get('/movies', (req, res) => {
     Movies.find()
         .then((movies) => {
          res.status(200).json(movies);   
