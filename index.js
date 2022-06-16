@@ -14,8 +14,6 @@ const Movies = Models.Movie,
       Users = Models.User,
       app = express();
 
-const cors = require('cors');
-app.use(cors());
 
 // let allowedOrigins = ['http://localhost:1234', 'http://testsite.com', 'http://localhost:8080'];
 
@@ -38,6 +36,8 @@ const { check, validationResult } = require('express-validator');
 
 // mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.connect('mongodb+srv://mongonewuser:mongonewpass@cfcluster.roki2yw.mongodb.net/?retryWrites=true&w=majority', {  useNewUrlParser: true, useUnifiedTopology: true });
+const cors = require('cors');
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
