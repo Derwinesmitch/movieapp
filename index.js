@@ -4,7 +4,8 @@ const express = require('express'),
     mongoose = require('mongoose'),
     path = require('path'),
     Models = require('./models.js');    
-
+const passport = require('passport');
+require('./passport');
 
 
 
@@ -35,20 +36,19 @@ const { check, validationResult } = require('express-validator');
 
 
 // mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true});
-mongoose.connect('mongodb+srv://mongonewuser:mongonewpass@cfcluster.roki2yw.mongodb.net/?retryWrites=true&w=majority', {  useNewUrlParser: true, useUnifiedTopology: true });
-const cors = require('cors');
-app.use(cors());
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+const cors = require('cors');
+app.use(cors());
 
 
+let auth = require('./auth')(app);
 app.use(morgan('common'));
 app.use(express.static('public'));
 
-let auth = require('./auth')(app);
-const passport = require('passport');
-require('./passport');
+mongoose.connect('mongodb+srv://mongonewuser:mongonewpass@cfcluster.roki2yw.mongodb.net/?retryWrites=true&w=majority', {  useNewUrlParser: true, useUnifiedTopology: true });
 
 
 app.get('/', (req, res) => {
