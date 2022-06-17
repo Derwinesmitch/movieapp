@@ -48,7 +48,7 @@ let auth = require('./auth')(app);
 app.use(morgan('common'));
 app.use(express.static('public'));
 
-mongoose.connect('mongodb+srv://mongonewuser:mongonewpass@cfcluster.roki2yw.mongodb.net/myFlixDB?retryWrites=true&w=majority', {  useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 app.get('/', (req, res) => {
