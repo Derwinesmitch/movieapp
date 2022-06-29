@@ -160,7 +160,7 @@ app.get('/users/:Username', passport.authenticate('jwt', {session: false}), (req
     })
 });
 
-app.get('/movies/genre/:Name', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.get('/movies/genres/:Name', passport.authenticate('jwt', {session: false}), (req, res) => {
     Movies.findOne({ 'Genre.Name': req.params.Name })   
    .then((genre) => {
        res.json(genre);
