@@ -1,9 +1,9 @@
 const express = require('express'),
       morgan = require('morgan'),
-    bodyParser = require('body-parser'),   
+    bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
     path = require('path'),
-    Models = require('./models.js');    
+    Models = require('./models.js');
 const passport = require('passport');
 require('./passport');
 
@@ -59,12 +59,12 @@ app.get('/documentation', function(req, res) {
     res.sendFile(path.join(__dirname + "/public/documentation.html"));
 });
 
-app.post('/users', 
+app.post('/users',
 [
     check('Username', 'Username is required').isLength({min: 5}),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email does not apepar to be valid').isEmail()
+    check('Email', 'Email does not appear to be valid').isEmail()
 ], (req, res) => {
 
     let errors = validationResult(req);
@@ -72,25 +72,24 @@ app.post('/users',
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
     }
-    
+
     const hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOne({ Username: req.body.Username })
     .then((user) => {
         if(user) {
             return res.status(400).send(req.body.Username + ' already exists');
         } else {
-            Users
-                .create({
+            Users.create({
                     Username: req.body.Username,
                     Password: hashedPassword,
                     Email: req.body.Email,
                     Birthday: req.body.Birthday
                 })
-                .then((user) =>{res.status(201).json(user) })
+                .then((user) => {res.status(201).json(user) })
                 .catch((error) => {
                 console.error(error);
                 res.status(500).send('Error: ' + error);
-            })
+            });
         }
     })
     .catch((error) => {
@@ -106,7 +105,7 @@ app.put('/users/:Username',
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does not apepar to be valid').isEmail()
 ],
-passport.authenticate('jwt', { session: false}), 
+passport.authenticate('jwt', { session: false}),
   (req, res) => {
 
     let errors = validationResult(req);
@@ -114,7 +113,7 @@ passport.authenticate('jwt', { session: false}),
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
     }
-   
+
     const hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOneAndUpdate(
         {Username: req.params.Username},
@@ -161,7 +160,7 @@ app.get('/users/:Username', passport.authenticate('jwt', {session: false}), (req
 });
 
 app.get('/movies/genres/:Name', passport.authenticate('jwt', {session: false}), (req, res) => {
-    Movies.findOne({ 'Genre.Name': req.params.Name })   
+    Movies.findOne({ 'Genre.Name': req.params.Name })
    .then((genre) => {
        res.json(genre);
    })
@@ -174,7 +173,7 @@ app.get('/movies/genres/:Name', passport.authenticate('jwt', {session: false}), 
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
         .then((movies) => {
-         res.status(200).json(movies);   
+         res.status(200).json(movies);
         })
         .catch((error) => {
             console.error(error);
@@ -202,7 +201,7 @@ app.get('/movies/directors/:Name', passport.authenticate('jwt', {session: false}
         .catch((err) => {
             console.error(err);
             res.status(500).send('Error: ' + err);
-    });    
+    });
 });
 
 
