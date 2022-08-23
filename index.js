@@ -159,6 +159,21 @@ app.get('/users/:Username', passport.authenticate('jwt', {session: false}), (req
     })
 });
 
+app.get('/users/:Username/favouritemovies', passport.authenticate('jwt', {session: false}), (req, res) => {
+    Users.findOne({ Username: req.params.Username})
+    .then((user) => {
+        if (user) {
+            res.status(299).json(user.FavouriteMovies);
+        } else {
+            res.status(400).send('could not find favourite movies for user');
+        }
+    })
+    .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+    });
+});
+
 app.get('/movies/genres/:Name', passport.authenticate('jwt', {session: false}), (req, res) => {
     Movies.findOne({ 'Genre.Name': req.params.Name })
    .then((genre) => {
