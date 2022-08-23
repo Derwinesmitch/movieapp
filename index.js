@@ -227,7 +227,7 @@ app.get('/movies/directors/:Name', passport.authenticate('jwt', {session: false}
 
 
 
-app.post('/users/:Username/favouritemovies/:MovieID', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.put('/users/:Username/favouritemovies/:MovieID', passport.authenticate('jwt', {session: false}), (req, res) => {
     Users.findOneAndUpdate({ Username: req.params.Username },
         {
             $push: { FavouriteMovies: req.params.MovieID}
